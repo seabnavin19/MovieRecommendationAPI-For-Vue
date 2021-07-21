@@ -1,6 +1,11 @@
 from flask import Flask,jsonify,json,request,render_template
 from utils import *
-app=Flask(__name__)
+
+
+app = Flask(__name__)
+
+
+
 
 
 @app.route("/search",methods=["GET","POST"])
@@ -17,7 +22,9 @@ def home():
     # print(links_re.values[0])
 
     movies_result = [{"Title": movies_re["title"].values[i]} for i in range(len(movies_re))]
-    return jsonify({"Movies":movies_result})
+    response=jsonify({"Movies":movies_result})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 @app.route("/predict", methods=['GET',"POST"])
 def predict():
         image_link="https://st3.depositphotos.com/1005979/13618/i/600/depositphotos_136182400-stock-photo-coming-soon-words-movie-clapper.jpg"
@@ -42,7 +49,11 @@ def predict():
                 image_movies.append(image_link)
 
         movies_result=[{"Title":list_movies[i],"genres":genres[i],"link":base_link+str(int(link_movies[i])),"Image":image_movies[i]} for i in range(len(list_movies))]
-        return jsonify(Movies=movies_result)
+        response=jsonify({
+            "Movies":movies_result
+        })
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 
 if __name__=="__main__":
